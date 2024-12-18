@@ -18,13 +18,15 @@ import {
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ProjectService } from '../project.service';
 import { Project, UpdateProjectDTO } from '../project';
+import { DatePipe } from '@angular/common';
+
 @Component({
   selector: 'app-project-read-by-id',
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule, RouterLink],
   template: `
     <div class="project-details-page">
-      <h1 class="project-details-page__title">Project Details</h1>
+      <h1 class="project-details-page__title">Project Read Details</h1>
       <h4 class="project-details-page__subtitle">
         Explore the detailed information about your selected project.
       </h4>
@@ -79,6 +81,7 @@ import { Project, UpdateProjectDTO } from '../project';
               class="project-details-page__form-control"
               formControlName="startDate"
               readonly
+              value="{{ project.startDate | date: 'short'}}"
             />
           </div>
 
@@ -92,6 +95,7 @@ import { Project, UpdateProjectDTO } from '../project';
               class="project-details-page__form-control"
               formControlName="endDate"
               readonly
+              value="{{ project.endDate | date: 'short'}}"
             />
           </div>
 
@@ -105,6 +109,7 @@ import { Project, UpdateProjectDTO } from '../project';
               class="project-details-page__form-control"
               formControlName="dateCreated"
               readonly
+              value="{{ project.dateCreated | date: 'short'}}"
             />
           </div>
 
@@ -118,6 +123,7 @@ import { Project, UpdateProjectDTO } from '../project';
               class="project-details-page__form-control"
               formControlName="dateModified"
               readonly
+              value="{{ project.dateModified | date: 'short'}}"
             />
           </div>
 
@@ -266,7 +272,7 @@ export class ProjectReadByIdComponent {
         this.projectForm.controls['description'].setValue(
           this.project.description
         );
-        this.projectForm.controls['startDate'].setValue(this.project.startDate);
+        this.projectForm.controls['startDate'].setValue(this.project.startDate );
         this.projectForm.controls['endDate'].setValue(this.project.endDate);
         this.projectForm.controls['dateCreated'].setValue(this.project.dateCreated);
         this.projectForm.controls['dateModified'].setValue(this.project.dateModified);

@@ -1,54 +1,81 @@
-//Leah Harris
-//Component to delete tasks
-//Ref: Lean, Mean and Pragmatic Textbook
 
 import { Component } from '@angular/core';
 import { TaskService } from '../task.service';
-import { Task } from '../task';
 import { CommonModule } from '@angular/common';
+import { Task } from '../task';
 import { RouterLink } from '@angular/router';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { debounceTime, map, of } from 'rxjs';
+import { DatePipe } from '@angular/common';
+import { HighlightRecentDirective } from '../highlight-recent.directive';
+import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-task-delete',
+  selector: 'app-task-read-menu',
   standalone: true,
-  imports: [RouterLink, CommonModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterLink,
+    HighlightRecentDirective,
+    FormsModule,
+  ],
+  providers: [DatePipe],
   template: `
     <div class="task-page">
-      <h1 class="task-page__title">Delete Tasks</h1>
+      <h1 class="task-page__title">Task Read Menu</h1>
 
-      @if(tasks && tasks.length > 0) {
-      <table class="task-page__table">
-        <thead class="task-page__table-head">
-          <tr class="task-page__table-row">
-            <th class="task-page__table-header">Title</th>
-            <th class="task-page__table-header">Description</th>
-            <th class="task-page__table-header">Status</th>
-            <th class="task-page__table-header">Priority</th>
-            <th class="task-page__table-header">Due Date</th>
-            <th class="task-page__table-header">Project ID</th>
-            <th class="task-page__table-header">Function</th>
-          </tr>
-        </thead>
+      <button class="task-page__button" routerLink="/tasks/read/details">Search and Read Task by Task Id</button>
 
-        <tbody class="task-page__table-body">
-          <tr *ngFor="let task of tasks" class="task-page__table-row">
-            <td class="task-page__table-cell">{{ task.title }}</td>
-            <td class="task-page__table-cell">{{ task.description }}</td>
-            <td class="task-page__table-cell">{{ task.status }}</td>
-            <td class="task-page__table-cell">{{ task.priority }}</td>
-            <td class="task-page__table-cell">{{ task.dueDate | date: 'shortDate' }}</td>
-            <td class="task-page__table-cell">{{ task.projectId }}</td>
-            <td class="task-page__table-cell task-page__cell--functions">
-              <a (click)="deleteTask(task._id)" class="task-page__icon-link"
-                ><i class="fas fa-trash-alt"></i
-              ></a>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      } @else {
-      <p class="task-page__no-tasks">No tasks found...</p>
-      }
+      <div class="task-page__filter-container">
+        <input
+          type="text"
+          placeholder="Filter by task name"
+          [formControl]="textSearchControl"
+          class="task-page__filter"
+        />
+      </div>
+
+      <div
+        *ngIf="serverMessage"
+        [ngClass]="{
+          'message-alert': serverMessageType === 'error',
+          'message-success': serverMessageType === 'success'
+        }"
+      >
+        {{ serverMessage }}
+      </div>
+
+      <div *ngIf="tasks && tasks.length > 0; else noTasks">
+        <table class="task-page__table">
+          <thead class="task-page__table-head">
+            <tr class="task-page__table-row">
+              <th class="task-page__table-header">Title</th>
+              <th class="task-page__table-header">Task Id</th>
+              <th class="task-page__table-header">Read</th>
+            </tr>
+          </thead>
+          <tbody class="task-page__table-body">
+            @for (task of tasks; track task) {
+            <tr class="task-page__table-row">
+                <td class="task-page__table-cell">{{ task.title }}</td>
+                <td class="task-page__table-cell">{{ task._id }}</td>
+                <td class="task-page__table-cell task-page__table-cell--functions">
+                <a
+                  routerLink="/tasks/read/{{ task._id }}"
+                  class="task-page__iconlink"
+                  ><i class="fas fa-sticky-note" ></i
+                ></a>
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <ng-template #noTasks>
+        <p class="task-search-page__no-tasks">No tasks found.</p>
+      </ng-template>
     </div>
   `,
   styles: [
@@ -83,7 +110,7 @@ import { RouterLink } from '@angular/router';
       }
       .task-page__icon-link {
         cursor: pointer;
-        color: green;
+        color: #6c757d;
         text-decoration: none;
         margin: 0 5px;
       }
@@ -166,13 +193,23 @@ import { RouterLink } from '@angular/router';
     `,
   ],
 })
-export class TaskDeleteComponent {
+export class TaskReadMenuComponent {
+  textSearchControl = new FormControl('');
+  allTasks: Task[] = [];
   tasks: Task[] = [];
+  filterType: string = '';
+  serverMessage: string | null = null;
+  serverMessageType: 'success' | 'error' | null = null;
+  filterPriority: string = ''; //added by BT
+  filterStatus: string = ''; // added by BT
 
-  constructor(private taskService: TaskService) {
+  constructor(private taskService: TaskService, private datePipe: DatePipe) {
+    this.tasks = this.allTasks;
+
     this.taskService.getTasks().subscribe({
       next: (tasks: Task[]) => {
         this.tasks = tasks;
+        this.allTasks = tasks;
         console.log(`Tasks: ${JSON.stringify(this.tasks)}`);
       },
       error: (err: any) => {
@@ -180,23 +217,24 @@ export class TaskDeleteComponent {
         this.tasks = [];
       },
     });
+
+    this.textSearchControl.valueChanges
+      .pipe(debounceTime(500))
+      .subscribe((val) => this.filterTasks(val || ''));
   }
 
-  deleteTask(taskId: string) {
-    if (!confirm('Are you sure you want to delete this task?')) {
-      return;
-    }
+  //Filter
+  filterTasks(title: string) {
+    this.tasks = this.allTasks.filter((g) =>
+      g.title.toLowerCase().includes(title.toLowerCase())
+    );
+  }
 
-    this.taskService.deleteTask(taskId).subscribe({
-      next: () => {
-        console.log(`Task with ID ${taskId} was deleted successfully`);
-        this.tasks = this.tasks.filter((g) => g._id !== taskId);
-      },
-      error: (err: any) => {
-        console.error(
-          `Error occurred while deleting task with ID ${taskId}: ${err}`
-        );
-      },
-    });
+  // Message
+  private clearMessageAfterDelay() {
+    setTimeout(() => {
+      this.serverMessage = null;
+      this.serverMessageType = null;
+    }, 3000);
   }
 }

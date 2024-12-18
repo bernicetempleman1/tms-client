@@ -25,12 +25,27 @@ import { TaskUpdateMenuComponent } from './task/task-update-menu/task-update-men
 import { TaskUpdateComponent } from './task/task-update/task-update.component';
 import { TaskDeleteComponent } from './task/task-delete/task-delete.component';
 import { TaskReadByIdComponent } from './task/task-read-by-id/task-read-by-id.component';
+import { TaskReadMenuComponent } from './task/task-read-menu/task-read-menu.component';
+import { TaskReadComponent } from './task/task-read/task-read.component';
 import { TaskListComponent } from './task/task-list/task-list.component';
 import { TaskSearchComponent } from './task/task-search/task-search.component';
+
+import { TaskReportComponent } from './report/task/task-report/task-report.component';
+import { ProjectReportComponent } from './report/project/project-report/project-report.component';
+
+import { SupportComponent } from './support/support.component';4
+import { FaqComponent } from './faq/faq.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { NotFoundComponent } from './not-found/not-found.component';
+
 
 export const routes: Routes = [
   {
     path: '',
+    component: DashboardComponent,
+  },
+  {
+    path: 'home',
     component: HomeComponent,
   },
   {
@@ -58,8 +73,16 @@ export const routes: Routes = [
     component: TaskListComponent,
   },
   {
-    path: 'tasks/read',
+    path: 'tasks/read/details',
     component: TaskReadByIdComponent,
+  },
+  {
+    path: 'tasks/read',
+    component: TaskReadMenuComponent,
+  },
+  {
+    path: 'tasks/read/:taskId',
+    component: TaskReadComponent,
   },
   {
     path: 'tasks/search',
@@ -102,4 +125,27 @@ export const routes: Routes = [
     path: 'projects/search',
     component: ProjectSearchComponent,
   },
+  {
+    path: 'reports/task/task-report',
+    component: TaskReportComponent,
+  },
+  {
+    path: 'reports/project/project-report',
+    component: ProjectReportComponent,
+  },
+  {
+    path: 'support',
+    component: SupportComponent,
+  },
+  {
+    path: 'faq',
+    component: FaqComponent,
+  },
+  {
+    path: 'dashboard',
+    component: DashboardComponent,
+  },
+  {path: '**', component: NotFoundComponent},
+  {path: 'not-found', component: NotFoundComponent},
 ];
+

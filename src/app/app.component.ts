@@ -21,7 +21,8 @@ import { Router, RouterLink, RouterOutlet } from '@angular/router';
           <h2 class="app__side-menu-title">{{ title }}</h2>
         </div>
 
-        <a class="app__side-menu-link" routerLink="/">Home</a>
+        <a class="app__side-menu-link" routerLink="/">Dashboard</a>
+
 
         <div
           class="app__side-menu-section"
@@ -101,6 +102,7 @@ import { Router, RouterLink, RouterOutlet } from '@angular/router';
 
         <a class="app__side-menu-link" routerLink="/support">Support</a>
         <a class="app__side-menu-link" routerLink="/faq">FAQ</a>
+        <a class="app__side-menu-link" routerLink="/home">Home</a>
       </nav>
 
       <div class="app__main-content">
@@ -130,6 +132,7 @@ import { Router, RouterLink, RouterOutlet } from '@angular/router';
       display: flex;
       flex-direction: column;
       min-height: 100vh;
+      min-width: 200vh;
     }
 
     .app__side-menu {
@@ -199,6 +202,7 @@ import { Router, RouterLink, RouterOutlet } from '@angular/router';
       display: flex;
       justify-content: space-between;
       align-items: center;
+      background-size: auto;
     }
 
     .app__header-content {
@@ -233,6 +237,7 @@ import { Router, RouterLink, RouterOutlet } from '@angular/router';
       border: 0;
       height: 1px;
       background: #e0e0e0;
+      background-size: auto;
     }
   `,
 })
@@ -250,10 +255,10 @@ export class AppComponent {
 
   // Array to hold the task management links in the side menu. Must be an
   TaskManagement = [
-    { name: 'Create Task', url: '/tasks/create' },
+    { name: 'Create a Task', url: '/tasks/create' },
     { name: 'Read a Task', url: '/tasks/read' },
-    { name: 'Update Task', url: '/tasks/update' },
-    { name: 'Delete Task', url: '/tasks/delete' },
+    { name: 'Update Tasks', url: '/tasks/update' },
+    { name: 'Delete Tasks', url: '/tasks/delete' },
     { name: 'List All Tasks', url: '/tasks/list' },
     { name: 'Search Tasks', url: '/tasks/search' },
     // Add more reports as needed
@@ -261,25 +266,25 @@ export class AppComponent {
 
   // Array to hold the task management links in the side menu. Must be an
   ProjectManagement = [
-    { name: 'Create Project', url: '/projects/create' },
+    { name: 'Create a Project', url: '/projects/create' },
     { name: 'Read a Project', url: '/projects/read' },
-    { name: 'Update Project', url: '/projects/update' },
-    { name: 'Delete Project', url: '/projects/delete' },
-    { name: 'List All Project', url: '/projects/list' },
-    { name: 'Search Project', url: '/projects/search' },
+    { name: 'Update Projects', url: '/projects/update' },
+    { name: 'Delete Projects', url: '/projects/delete' },
+    { name: 'List All Projects', url: '/projects/list' },
+    { name: 'Search Projects', url: '/projects/search' },
     // Add more reports as needed
   ];
 
-  // Array to hold the sales reports links in the side menu. These links are visible to all users
+  // Array to hold reports links in the side menu. These links are visible to all users
   taskReports = [
-    { name: 'Tasks by Priority', url: '/reports/tasks/tasks-by-priority' },
+    { name: 'Task Report', url: '/reports/task/task-report' },
     // Add more reports as needed
   ];
 
   projectReports = [
     {
-      name: 'Projects by End Date',
-      url: '/reports/projects/projects-by-end-date',
+      name: 'Project Report',
+      url: '/reports/project/project-report',
     },
     // Add more reports as needed
   ];

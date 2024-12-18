@@ -15,6 +15,7 @@ import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { debounceTime, map, of } from 'rxjs';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-project-read-menu',
@@ -23,7 +24,7 @@ import { debounceTime, map, of } from 'rxjs';
 
   template: `
     <div class="project-page">
-      <h1 class="project-page__title">Project Details Menu</h1>
+      <h1 class="project-page__title">Project Read Menu</h1>
 
       <div class="project-page__search-container">
         <input
@@ -61,7 +62,7 @@ import { debounceTime, map, of } from 'rxjs';
             <td class="project-page__table-cell">{{ project.projectId }}</td>
             <td class="project-page__table-cell">{{ project.name }}</td>
             <td class="project-page__table-cell">{{ project.description }}</td>
-            <td class="project-page__table-cell">{{ project.dateCreated }}</td>
+            <td class="project-page__table-cell">{{ project.dateCreated | date : 'shortDate' }}</td>
             <td
               class="project-page__table-cell project-page__table-cell--functions"
             >

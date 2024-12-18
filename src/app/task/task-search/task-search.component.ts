@@ -7,9 +7,8 @@ import { Component } from '@angular/core';
 import { TaskService } from '../task.service';
 import { CommonModule } from '@angular/common';
 import { Task } from '../task';
-import { RouterLink } from '@angular/router';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { debounceTime, map, of } from 'rxjs';
+import { debounceTime } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { HighlightRecentDirective } from '../highlight-recent.directive'; // added by BT
 import { FormsModule } from '@angular/forms';
@@ -20,7 +19,6 @@ import { FormsModule } from '@angular/forms';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    RouterLink,
     HighlightRecentDirective,
     FormsModule,
   ],
@@ -94,7 +92,6 @@ import { FormsModule } from '@angular/forms';
               <th class="task-page__table-header">Priority</th>
               <th class="task-page__table-header">Due Date</th>
               <th class="task-page__table-header">Project</th>
-              <th class="task-page__table-header">Task Id</th>
             </tr>
           </thead>
           <tbody class="task-page__table-body">
@@ -107,10 +104,9 @@ import { FormsModule } from '@angular/forms';
               <td class="task-page__table-cell">{{ task.status }}</td>
               <td class="task-page__table-cell">{{ task.priority }}</td>
               <td class="task-page__table-cell">
-                {{ task.dueDate | date : 'short' }}
+                {{ task.dueDate | date: 'shortDate' }}
               </td>
               <td class="task-page__table-cell">{{ task.projectId }}</td>
-              <td class="task-page__table-cell">{{ task._id }}</td>
             </tr>
             }
           </tbody>
